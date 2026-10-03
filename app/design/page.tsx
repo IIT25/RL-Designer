@@ -15,6 +15,7 @@ export default function Page() {
    const idesignContext: IDesignContext = useContext(DesignContext);
    //output declarations
    const [submit, setSubmit] = useState(2)
+   const [pdb_text, setPdb_text] = useState("")
    const [pdb_link, setPdb_link] = useState("")
    const [invalidInput, setInvalidInput] = useState(false)
    const [response, setdata] = useState({
@@ -61,7 +62,7 @@ export default function Page() {
                     seq: data.sequence,
                     structure: data.generated_structure
                 })
-            }).then((res) => res.json().then((pdb_data) => setPdb_link(BACKEND_URL + pdb_data.path + ".pdb")))
+            }).then((res) => res.json().then((pdb_data) => setPdb_text(pdb_data.pdb)))
                 })
             );
             setIsDataLoading(false);
@@ -85,6 +86,11 @@ export default function Page() {
         idesignContext.setMiRNA_list(["UAGCUUAUCAGACUGAUGUUGACU", "UGGAGUGUGACAAUGGUGUUUG"])
         idesignContext.setProtein("")
     }
+    useEffect(() => {
+        if (pdb_link != "") URL.revokeObjectURL(pdb_link);
+        setPdb_link(URL.createObjectURL(new Blob([pdb_text], { type: "chemical/x-pdb" })));
+    },
+    [pdb_text]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-around p-10">
     <h1 className="mb-4 text-2xl font-bold tracking-tight text-heading md:text-4xl lg:text-5xl">Design page</h1>
@@ -95,8 +101,8 @@ export default function Page() {
     <button onClick={handleButtonSubmit} className="py-4 px-4 rounded-full transition-colors bg-white hover:bg-[#383838] dark:hover:bg-[#ccc]">Construct the design!</button>
      {isDataLoading && <LoadingIndicator />}
      {!isDataLoading && submit !=2 && <DesignOutput sequence={response.sequence} gen_structure={response.generated_structure} original_structure={response.original_structure} mfe={response.mfe}/>}
-    {/*<div className="h-50 max-h-50 p-10">
-     {!isDataLoading && (pdb_link != "") && submit !=2 && (<div className="flex flex-col">
+    <div className="h-50 max-h-50 p-10">
+     {!isDataLoading && (pdb_text != "") && submit !=2 && (<div className="flex flex-col">
         <div className="flex bg-gray-400 rounded -mb-16 z-40 justify-end ml-auto">
      <Link href={pdb_link}>
      <Image
@@ -109,7 +115,7 @@ export default function Page() {
     </div>
      <div className="z-0"><Viewer3d url={pdb_link} /></div>
      </div>)}
-    </div>*/}
+    </div>
 
     </main>
 

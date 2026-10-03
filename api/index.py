@@ -336,7 +336,7 @@ def construct_design(domains):
     '''
     return [best_result[1],  best_result[2], structure_map, best_result[3]]
 
-
+'''
 @app.route("/pdb", methods=['POST'])
 def pdb_file():
     import pyfurnace as pf
@@ -375,8 +375,32 @@ def pdb_file():
     print(origami_motif_build)
     origami = origami_motif_build
     path = "./data/pdb/" + str(random.random())[2:]
-    #origami.save_3d_model(path, pdb=True)
+    origami.save_3d_model(path, pdb=True)
     return jsonify({"path": path[2:]})
+'''
+@app.route("/pdb", methods=['POST'])
+def pdb_file():
+    req_data = request.get_json()
+    sequence = req_data['seq']
+    structure = req_data['structure']
+    print("Got " + sequence)
+    print("Got " + structure)
+    import subprocess, tempfile, pathlib
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = pathlib.Path(tmp)
+        (tmp / "input.fasta").write_text(f">query\n{sequence}\n")
+        subprocess.run(
+            ["python", "inference.py",
+             "--input_fas", str(tmp / "input.fasta"),
+             "--single_seq_pred", "True",
+             "--output_dir", str(tmp),
+             "--ckpt", "pretrained/RhoFold_pretrained.pt",
+             "--device", "cpu",
+             "--relax_steps", "0"],
+            cwd="./RhoFold", check=True, timeout=1800,
+        )
+        return jsonify(pdb=((tmp / "unrelaxed_model.pdb").read_text()))
+
 
 @app.route('/data/pdb/<path:filename>', methods=['GET'])
 @cross_origin()

@@ -3,15 +3,23 @@ name = "vercel-flask-starter"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+  "biopython>=1.88",
+  "dm-tree>=0.1.10",
+  "einops>=0.8.2",
   "flask>=3.1,<4.0",
   "flask-cors>=6.0.5",
   "gunicorn~=23.0.0",
+  "huggingface-hub>=2.0.0",
   "ipython>=9.17.1",
   "matplotlib>=3.11.2",
+  "ml-collections>=1.1.0",
+  "numpy>=2.5.3",
   "openpyxl>=3.1.5",
   "pandas>=3.0.5",
   "pyfurnace",
+  "python-box>=7.4.1",
   "requests>=2.34.2",
+  "torch>=2.14.0",
   "ViennaRNA",
 ]
 
@@ -25,3 +33,11 @@ override-dependencies = [
     "st-oxview; sys_platform == 'never'",
     "pytest; sys_platform == 'never'",
 ]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
