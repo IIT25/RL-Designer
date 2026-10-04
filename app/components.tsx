@@ -8,7 +8,6 @@ import { PluginContext } from 'molstar/lib/mol-plugin/context';
 import { DefaultPluginSpec } from 'molstar/lib/mol-plugin/spec';
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 
 
@@ -28,7 +27,7 @@ export function MiRNAInputField({index} :{index : number}) {
     }
 
     debounceRef.current = window.setTimeout(() => {
-      fetch(BACKEND_URL + `/suggest?query=${encodeURIComponent(query)}`)
+      fetch(`/api/suggest?query=${encodeURIComponent(query)}`)
         .then((res) => res.json())
         .then((data) => {
           setSuggestions(data.suggestions ?? ["No matches found"]);
@@ -96,7 +95,7 @@ export function ProteinInputField() {
     }
 
     debounceRef.current = window.setTimeout(() => {
-      fetch(BACKEND_URL + `/mrna?query=${encodeURIComponent(query)}`)
+      fetch(`/api/mrna?query=${encodeURIComponent(query)}`)
         .then((res) => res.json())
         .then((data) => {
           setSuggestions(data.suggestions ?? ["No matches found"]);

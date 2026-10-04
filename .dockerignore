@@ -1,0 +1,8 @@
+node_modules
+data
+.next
+.git
+.vercel
+.venv
+# The Flask backend has its own image
+api

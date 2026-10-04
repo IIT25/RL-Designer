@@ -1,0 +1,38 @@
+
+services:
+  backend:
+    build: ./api
+    restart: unless-stopped
+    # No "ports": only the frontend talks to the backend, over the internal network.
+
+  frontend:
+    build:
+      context: .
+      args:
+        # "backend" is the service name above
+        BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    # No "ports" either: Caddy below is the only way in, over HTTPS.
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      # Set in the .env file next to this one, e.g. DOMAIN=rl.example.com
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # keeps the certificates across restarts
+      - caddy_config:/config
+    depends_on:
+      - frontend
+
+volumes:
+  caddy_data:
+  caddy_config:

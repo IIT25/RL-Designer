@@ -2,9 +2,8 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import {MiRNATable} from '../components'
 import AsyncSelect from 'react-select/async';
-import disease_names from '../../data/HMDD_disease_names.json';
+import disease_names from '../data/HMDD_disease_names.json';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function Page() {
    interface Option {
@@ -22,7 +21,7 @@ let default_option: Option = {
 
   useEffect(() => {
       const query = selectedTarget
-        fetch(BACKEND_URL + `/target?query=${encodeURIComponent(query)}`)
+        fetch(`/api/target?query=${encodeURIComponent(query)}`)
           .then((res) => res.json())
           .then((data) => {
             setmiRNAResults(data.results ?? ["No matches found"]);

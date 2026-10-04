@@ -8,7 +8,6 @@ import Image from 'next/image';
 import img from '../../public/file_download.svg'
 
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function Page() {
    //Read context
@@ -36,7 +35,7 @@ export default function Page() {
         else {
         setIsDataLoading(true)
 
-        await fetch(BACKEND_URL + "/construct", {
+        await fetch("/api/construct", {
                 method: "POST",
                 headers: { "Content-type": "application/json"},
                 //Match inputs here
@@ -54,7 +53,7 @@ export default function Page() {
                         mfe: data.mfe,
                         filepath: data.filepath
                     });
-                    fetch(BACKEND_URL + "/pdb", {
+                    fetch("/api/pdb", {
                     method: "POST",
                     headers: { "Content-type": "application/json"},
                     //Match inputs here

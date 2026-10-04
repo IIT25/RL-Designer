@@ -100,9 +100,6 @@ def python_route():
                 #"pdb_content_bytes": pdb_content})
     else: 
         print("Type of request is not POST")
-    
-
-from pyfurnace import Origami
 
 def comp(seq): # This is just generate the complementary domains -> since the script went trough a couple of iterations there are some redundancy in some of the functions, but I will clean that up later
     transcribe_dict = {
